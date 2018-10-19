@@ -1,0 +1,463 @@
+\documentclass{article}
+%
+\usepackage{lineno,hyperref}
+\modulolinenumbers[5]
+%
+\usepackage{color}
+\usepackage{multirow}
+\usepackage{pgfplots}
+\usepackage{caption}
+\usepackage{float}
+\usepackage{colortbl}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\usepackage[bottom]{footmisc}
+\usepackage{cleveref}
+\usepackage{pst-plot}
+\usetikzlibrary{babel}
+\usepackage{refcount}
+\usepackage{mathtools}
+\usepackage{afterpage}
+\usepackage{subcaption}
+%
+\usepackage[english]{babel}
+%\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+%
+\pgfplotsset{compat=1.5}
+\pgfplotsset
+{
+	width=0.5\textwidth,
+	x tick label style={/pgf/number format/1000 sep=},
+	enlarge x limits = 0.0,
+	ymajorgrids=true,
+	major tick style={draw=none},
+	ymin = 0.0,
+	every axis/.append style={
+		every x tick label/.append style={font=\tiny},
+		every y tick label/.append style={font=\tiny},
+		every axis label/.append style={font=\small},
+		height=37mm,
+    	width=37mm,
+		title style={at={(0.5,0.90)}, font=\normalfont},
+		xticklabel style={yshift=4pt}
+	}
+}
+
+\title{Generating Object Cluster Hierarchies for Benchmarking}
+%
+\author{Micha\l{} Spytkowski \and \L{}ukasz P. Olech \and Halina Kwasnicka \\ Department of Computational Intelligence\\ Wroclaw University of Science and Technology, \\ Wybrzeze Wyspianskiego 27, 50-370 Wroclaw, Poland\\ e-mail: \url{michal.spytkowski@pwr.edu.pl}, \\ \url{lukasz.olech@pwr.edu.pl}, \\ \url{halina.kwasnicka@pwr.edu.pl}}
+
+\bibliographystyle{abbrv}
+
+\usepackage{ulem} %dla przekreslania tekstow
+\newcommand{\lukasz}[1]{\textcolor{blue}{#1}}
+\newcommand{\michal}[1]{\textcolor{red}{#1}}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+	Object Cluster Hierarchy is a new variant of hierarchical clustering that increasingly attracts more interest in the field of Machine Learning. Being a novelty, the lack of tools for systematic analysis and comparison of such structures inhibits its further development. In this paper, we propose a novel method for generating hierarchical structures of data based on Tree-Structured Stick Breaking Process (TSSBP) that can be used for benchmarking. The article includes theoretical analysis of the generation parameters, their influence on the generated hierarchies, and the flexibility of the model to create a wide range of differently-structured data. More importantly, the intuition how to operate with parameters and a set of benchmarking datasets is provided. The developed tools together with proposed benchmarks are publicly available (\texttt{http://kio.pwr.edu.pl/?page\_id=396}).
+\end{abstract}
+
+\textbf{keywords:} Artificial Data, Benchmark Data, Benchmark Data Generator, Object Cluster Hierarchy, Tree-Structured Stick Breaking Process, Clustering Evaluation, Cluster Analysis.
+
+\section{Introduction}
+
+\textbf{wsadzic to gdzies tutaj}
+Recently, researchers became interested in a new variant of hierarchical clustering, where hierarchical (partial order) relationships exist not only between clusters, as it happens in a dendrogram, but also between clustered objects. In this variant objects can be assigned not only to leaves but to any node of the hierarchy. Although examples of this approach already exist in literature, the authors have encountered a problem with the systematic analysis and comparison of such clustering results as there is a lack of available benchmark data. This work aims to fill this gap. 
+
+
+The enormity of digital data drives a rapid development of analysis methods, creating the opportunity to get the data insights from different perspectives. One of the key data analysis topics are \textit{regression}, \textit{classification}, and \textit{clustering}~\cite{Kakkar2014,Dash2003109,Xu:2005:SCA:2325810.2327433}.
+
+Clustering methods, in general, are still not satisfactory for a variety of data and specific goals~\cite{blundell2010discovering}. From the perspective of this research, the primary issue is a semantic gap that exists between how humans perceive hierarchies and hierarchical clustering methods. Hierarchical data (e.g.,~\cite{ILSVRC15}) is generally understood to possess the following properties:
+\begin{enumerate}
+    \item the data can be present to any node in the hierarchy, not only leaves; and
+    \item the data specificity should always be higher (at most equal) in a child node than in the corresponding parent node; and
+    \item the data in a node should be more similar to data in parent and child clusters than to unrelated clusters located in different subtrees in the hierarchy.
+\end{enumerate}
+
+Even though the first point is rarely addressed in hierarchical clustering approaches it can be seen in methods such as Tree-Structured Stick Breaking for Hierarchical Data (TSSB-HC)\cite{ghahramani2010tree}, Bayesian Rose Trees\cite{2010_bayesian_rose_trees}, Inheritance Retention Variance Hierarchical Clustering (IRV-HC)\cite{Spytkowski2012}, or modified hierarchic Gaussian Mixture Model (Hk++)\cite{Olech2016}. These methods address the human perception of hierarchy. The novelty of this research and the differences between these methods and classical clustering methods poses a question:
+
+\textit{Are existing clustering benchmarks capable of evaluating these unorthodox clustering methods?}
+
+In this paper, we address this question on the usage of synthetically generated data in the evaluation process.
+
+\subsection{Benchmarking in the analysis of clustering methods}
+
+Clustering methods can be tested on both real and generated data. The first type of data offers the advantage of presenting the reality. However, such data may not always be available in sufficient number, and/or in a form that facilitates testing. The second approach can be used in those cases. Artificially generated data possesses properties mimicking real data. This has the added benefit of allowing for finer control over the data used in testing, i.e., specific aspects of clustering can be tested separately.
+
+Usually, the designer of a new method wants to know how good the proposed method is in comparison to the others. Generally, such a comparison is made by running different methods on a number of commonly used benchmark datasets and then comparing their results using a set of evaluation measures, e.g.,~\cite{Dreiseitl200128,Cooper1997107,Douglas2011544,Kampichler2010441,DBLP:journals/corr/abs-1301-7401,steinbach00comparison,Kakkar2014}. There are many publicly available repositories, i.e. UCI repository~\cite{Dua2017UCI}, KEEL-dataset repository~\cite{alcala2011keel}, and others~\cite{2015ClusteringDatasets, OpenML2013} which provide variety of different datasets that can be used as benchmarking baseline in methods' comparison. 
+
+As an example, in~\cite{Dash2003109} the authors used many different datasets among which four were from the UCI ML repository to verify clustering methods such as CHAMELEON, CURE, and BIRCH~\cite{Karypis_chameleon:a,citeulike:1304883}. Costa et al.~\cite{Costa:2013} used real and synthetic XML data to evaluate the effectiveness and scalability of their method. Authors of~\cite{Maulik:2002:PEC:628333.628859} evaluated the performance of three different clustering methods according to four indices. Experiments were made using artificial and real-life datasets with the different number of clusters.
+
+With respect to hierarchical clustering methods, Adams et al. in~\cite{ghahramani2010tree} used two testing datasets - the CIFAR-100~\cite{krizhevsky2009learning} image set and a sample of 1740 documents from the NIPS 1-12\footnote{\url{https://cs.nyu.edu/~roweis/data.html}} datasets. The results were verified using Perplexity, but the used datasets lack a hierarchical structure. Authors in~\cite{2010_bayesian_rose_trees} used several datasets to present their hierarchical method performance, one of them was a synthetically generated dataset in the form of binary vectors. The others were Spambase Dataset from UCI repository, a subset of the CMU newsgroup dataset cut down to only 4 categories. The authors also tested using the CEDAR Buffalo\footnote{\url{http://www.cedar.buffalo.edu/Databases/}} digits data set in two versions - a subset of the full dataset and a sample of only the 0, 2 and 4 digits. Every one of these datasets was used in testing in the same way they would be used for flat clustering, ignoring the unique capabilities of the method. Authors in~\cite{Spytkowski2012} have proposed an extension to the method mentioned above~\cite{ghahramani2010tree}. The comparison with base method was made using synthetic benchmarks generated from a stochastic model of known parameters. Two measures were used internal one (Average Mixture Model Likelihood) and external (Class Purity), but again the class inclusion hierarchy was not considered. In~\cite{Olech2016} a GMM-based hierarchical clustering method was presented. UCI repository datasets were used for its verification, including the iris, wine, glass identification and image segmentation datasets. A modified F-measure was used to verify the results, that is adapted to hierarchical data. However, the datasets used were not annotated with an inclusion of a hierarchical relation between the classes.
+
+The publications mentioned above are the closest to the concept of Object Cluster Hierarchy (OCH) that we were able to find. However, by using data that is not annotated with a hierarchy of classes the verification does not allow the authors to present results concerning the hierarchical structure obtained in the end. In the case of Rose Trees~\cite{2010_bayesian_rose_trees}, in particular, the aspect was simply omitted due to the very conservative approach to testing the method's results. In the case of the TSSB method~\cite{ghahramani2010tree}, the hierarchy was thoroughly examined empirically and presented to the reader in a visual format. The authors of IRV-HC~\cite{Spytkowski2012} was focused on highlighting how the additional properties of the proposed method impact the final result regarding statistical characteristics, not external validation. In the case of Hk++~\cite{Olech2016}, the authors attempted to find a way of verifying the resulting hierarchies, but the used UCI data did not contain information about hierarchical relations between classes so that a method of synthetically generating data was used to support testing.
+
+Concluding, benchmarking is the primary approach to clustering method testing. Synthetic data generation allows to test characteristics of clustering method or clustering result selectively. All the researched literature suggests that methods capable of building structures similar to Object Cluster Hierarchies wasn't thoroughly tested on hierarchical data mainly due to the lack of hierarchical class ground truth assignment. Thus, there is a need for synthetic benchmarks (or benchmarking tool) allowing to fully grasp all the features of hierarchical structures.
+
+\subsection{Brief introduction to Object Cluster Hierarchies}
+
+In this paper, we focus on a novel approach to hierarchical clustering, namely --- an \textit{Object Cluster Hierarchy} (\textit{OCH})~\cite{Spytkowski2012,Olech2016}. The hierarchical clustering paradigm \cite{Dash2003109,Costa:2013,Cimiano2004,DBLP:journals/corr/abs-1105-0121}, either agglomerative or divisive approach, produces a dendrogram showing all levels of agglomerations. Although there is a hierarchy relation between clusters, there is \textit{no hierarchy relationship between objects}. It is because all grouped objects are assigned only to the leaves and clusters are the result of cutting the tree at different levels. Any node in the tree, except for leaves, does not have objects assigned to it. Thus, the structure of generated clusters is flat. 
+
+\input{och-example}
+    
+Our OCH approach extends hierarchical cluster analysis and allows assigning objects to each node in the produced hierarchy tree~\cite{ghahramani2010tree,Spytkowski2012,Olech2016,2010_bayesian_rose_trees}. Previously, researchers have developed methods which allow objects to be assigned to any node of the hierarchy tree, what is enough to receive a new hierarchy relation that exists between objects.
+
+    Within this paradigm we have formulated three important requirements~\cite{Spytkowski2012} to accurately reflect a semantic (ontological) approach to hierarchical clustering:
+\begin{enumerate}
+    \item {\textit{Inheritance} -- every object belonging to a given group also belongs to the parents groups, up to the root;}
+    \item {\textit{Retention} -- objects are not required to be located in the tree’s leaves;}
+    \item {\textit{Variance} -- groups located lower in the hierarchy are more specific, i.e., every child group has to have not higher variation than its parents.}
+\end{enumerate}
+
+These formal requirements serve to closer reflect the human perception of hierarchy that can be also found in images~\cite{ILSVRC15,ghahramani2010tree}, documents~\cite{ghahramani2010tree,2010_bayesian_rose_trees}, and communities structure~\cite{lancichinetti2009detecting, massaro2014hierarchical}.
+
+In the~\Cref{fig:och-example} a comparison between Hierarchical Clustering (a) and Object Cluster Hierarchy (b) is presented. In the former, the final clustering is flat, and the number of clusters depends on the hight where the dendrogram is cut. Considering~\Cref{fig:hierarchical-example}, by cutting it at the bottom of the hierarchy, a set of 7 clusters is formed, each of them containing 1 letter. Regardless of where the hierarchy is cut, the resulting clustering consists of all the same 7 letters. In comparison, in {fig:och-example}, the whole OCH represents the clustering - partition of all 7 letters. There is no need to cut a hierarchy. Due to hierarchical relations, objects from child clusters conceptually belongs to the parent clusters. Root always contains all the objects, whereas leaves contain only what belongs to them.
+
+Object Cluster Hierarchy is a novel concept that is recently gaining more interest. One of the first works on the subject of Object Clusters Hierarchy was published in~\cite{ghahramani2010tree} where the authors pointed out that many data arise from a latent hierarchy, for example, a set of text documents or images. Such data can be modelled by an Object Cluster Hierarchy, which is one possible way to discover the unobservable structure by inferring it during a learning process. Authors in~\cite{ghahramani2010tree} proposed a nonparametric method allowing to develop trees of unbounded width and depth. The objects can be assigned to any node in a created tree. Thus, some nodes can be empty, i.e., without any objects assigned. However, this method does not satisfy the \textit{Variance} requirement. Objects belonging to the child node can vary more than objects assigned to its parent node. Starting from this method as the prototype, the ongoing development has been carried out to propose a new version of it. This method is about to be published soon.
+
+    During the development of the method mentioned above, the authors met troubles with comparing the new method with others, especially with the inspiration~\cite{ghahramani2010tree} and Bayesian Rose Trees~\cite{DBLP:journals/corr/abs-1203-3468}. The problem, to the best of our knowledge, is twofold: firstly, there are no appropriate evaluation measures dedicated to object cluster hierarchies which would reflect the desired properties listed above. Secondly --- there are no available benchmark datasets with known properties, which could be used for testing different methods of hierarchical structure generation.
+    
+We started with a partial solution to the first problem that is presented in~\cite{Spytkowski2016}. However, new external and internal validation techniques have been developed and are planned to be published soon as their experimental study requires appropriate datasets. That requirement led to a development of a method generating the data structures with known characteristics that is addressed in this article. Being able to model the characteristics of created artificial datasets allow more in-depth analysis of both methods and evaluation measures.
+
+\subsection{Contribution and problem description}
+
+Our research aims to \textit{fill the gap in the presence of commonly accessible benchmark datasets}.
+    The main contribution of the paper is strictly scientific --- we have developed a \textit{new method generating hierarchical structures of data with assumed (precisely user-defined) properties}. The additional benefit for researchers is \textit{the establishment of a new set of benchmarks -- hierarchical structures of data with the true class assignment.} Our method, together with the benchmarking datasets is freely available on-line at \texttt{http://kio.pwr.edu.pl/?page\_id=396} along with instructions on how to use it.
+
+    During the development of our method, all aspects of the potential use of it and the use of the generated datasets have been taken into account. The proposed tool can be used to test methods of clustering that should ensure the generated data possesses the previously outlined requirements. Our published dataset can serve as a baseline benchmark for OCH method, however, the researches can also generate new structures of data according to their needs. Furthermore, such data and generator can help with proposing and testing new quality measures.  
+
+In this paper, we present and evaluate the details of the generator's model. We study the influence of the model's parameters on the characteristic of generated datasets. The influence of model's parameters on the shape and points distribution within the generated hierarchies is analytically evaluated. The conducted statistical analysis of the generated data present features of the proposed method. The tools together with generated datasets are free, and they are accessible from \texttt{http://kio.pwr.edu.pl/?page\_id=396}.
+    
+    The paper is organised as follows. The next section presents the model and the generation process. In~\Cref{parameter}, we describe the meaning of used parameters and provide insights on how to operate with them. Conducted experiments and their results are shown and discussed in~\Cref{experiments}. The correctness of analytical and intuitive properties of the generator and how the different parameters affect the outcome of generation were verified. The last section concludes the paper.
+%
+\section{Generator model}
+\label{model}
+	The data generated by this tool can be seen as data coming from an infinite mixture model. Most commonly an infinite mixture model is composed of infinite, indexed distributions from which the data is drawn. In such case the mixture weights can be drawn from a Dirichlet distribution, using the Stick Breaking Process. Generally, the distributions for the mixture components are unrelated to each other. This generator uses a similar approach, however, it bases its mixture weights on the Tree-Structured Stick Breaking Process, as described in~\cite{ghahramani2010tree}, which arranges the mixture components into a hierarchical structure. This structure also defines the relationship between the mixture components, that is -- children distributions are based on their parent's parameters.
+    
+    Hierarchies generated using the Stick Breaking Process posses the following characteristics~\cite{ghahramani2010tree, Spytkowski2012}:
+\begin{enumerate}
+    \item Every node can have an infinite number of child nodes;
+    \item The children of a node are indexed and ordered. However, this indexing is not important after the generation process finishes;
+    \item Every node in the hierarchy can have child nodes, the potential depth of the hierarchy is not limited to any crisp value;
+    \item The hierarchy may contain empty nodes, that is, the nodes that do not generate any data;
+    \item The child node distribution parameters are generated based on the parent parameters and a kernel describing the transition;
+    \item The shape of the generated hierarchy depends on a number of control hyperparameters described in the~\cref{parameter}.
+\end{enumerate}
+    
+    Throughout this paper following symbols are used to describe the generator and the generated model:
+	%
+\begin{tabbing}
+	$X$ \hspace{10mm} \= - set of all data points, or objects, \\
+	$x_i$ \> - an object or data point with unique identifier\\ \> $i$ represented by a vector of features, \\
+	$\Theta$ \> - set of all clusters, \\
+	$\epsilon$ \> - specific cluster from $\Theta$, \\
+	$\epsilon_{x_i}$ \> - cluster of object $x_i$, \\
+	$\epsilon\epsilon_i$ \> - the $i-th$ child of cluster $\epsilon$, if the Object Cluster Hierarchy is defined\\
+	$\epsilon_\varnothing$ \> - the root cluster of the Object Cluster Hierarchy\\
+	$X_\epsilon$ \> - set of all objects in cluster $\epsilon$, \\
+	$X_{E_\epsilon}$ \> - set of all objects in hierarchy subtree\\ \> starting with node $\epsilon$, \\
+	$|S|$ \> - number of elements in set S, \\
+	$|\epsilon|$ \> - depth of a node $\epsilon$, \\
+	$\theta_\epsilon$ \> - data distribution for the node $\epsilon$. Specifically, $\theta_{\epsilon_\varnothing}$ is the distribution of \\ \> the root node,  $\theta_{\epsilon_c}$ is the distribution of a node $\epsilon_c$, and $\theta_{\epsilon\epsilon_i}$ is the \\ \> distribution of a $i-th$ child of cluster $\epsilon$, \\
+	$Beta(\alpha, \beta)$ \; - Beta distribution with shape parameters $\alpha$ and $\beta$, \\
+	$Gauss(\mu, \sigma)$ \; - Gaussian distribution with mean $\mu$ and standard deviation $\sigma$.
+\end{tabbing}	
+	Additionally to the symbols above, several values are provided to the generator as parameters. The use of these parameters is further described in the~\cref{parameter} and their influence on the final result is empirically shown in the~\cref{experiments}:
+%
+\begin{tabbing}
+	$d$ \hspace{10mm} \= - the dimensionality of the generated data points, \\
+	$n$ \> - the number of data points to be generated, \\
+	$\alpha_0, \lambda$ \> - input parameters controlling the hierarchy\\ \> depth, used by equation $\alpha(\epsilon) = \alpha_0\lambda^{|\epsilon|}$ \\
+	$\gamma$ \> - parameter controlling the width of a tree structure, \\
+	$p, q$ \> - parameters controlling the specificity of the generated data. \\ \> They influence how much smaller the deviation of points'  \\ \> features in the child node should be in comparison with \\ \> points in the parent node, \\
+	$\theta_{\epsilon_\varnothing}$ \> - the distribution of the root node.
+\end{tabbing}
+	
+	Having these parameters we can defining the generator itself. We start with the conditional probabilities used to determine which node data is generated from. The first is the conditional probability of a datum remaining in node $\epsilon$, at depth $|\epsilon|$, when entering the node:
+%
+\begin{equation}
+\nu_\epsilon = P(x \in X_\epsilon | x \in X_{E_\epsilon}),
+\end{equation}
+%
+\begin{equation}\label{eq:alpha_function}
+\nu_\epsilon \sim Beta(1, \alpha(\epsilon)),\;\;\; \alpha(\epsilon) = \alpha_0\lambda^{|\epsilon|}.
+\end{equation}
+	%
+	The second is the conditional probability of a datum being transferred to the subtree $\epsilon\epsilon_i$ if it does not remain in node $\epsilon$ and hasn't been transferred to any of the previous siblings (i.e., did not travel down sibling subtrees with a lower indices $\epsilon\epsilon_j,~j < i$): 
+
+%
+\begin{equation}
+\begin{multlined}
+\psi_{\epsilon\epsilon_i} = P(x \in X_{E_{\epsilon\epsilon_i}} | x \in X_{E_\epsilon} \wedge  x \not\in X_\epsilon \wedge \neg \exists_{j < i} x \in X_{E_{\epsilon\epsilon_j}}),
+\end{multlined}
+\end{equation}
+%
+\begin{equation}
+\psi_{\epsilon\epsilon_i} \sim Beta(1, \gamma).
+\end{equation}
+%
+	Additionally, we need to define the kernel. We begin with a specified root node distribution $\theta_{\epsilon_\varnothing}$ given as a starting parameter of the generation method. The values set at this point are the means $(\mu)$ and standard deviations $(\sigma)$ for each of the $Gauss$ distributions in the $d$ different dimensions:
+%
+\begin{equation}
+\label{eq:theta-epsilon-varnothing}
+\theta_{\epsilon_\varnothing} = (Gauss(\mu_{{\epsilon_\varnothing} 1}, \sigma_{{\epsilon_\varnothing} 1}), ... , Gauss(\mu_{{\epsilon_\varnothing} d}, \sigma_{{\epsilon_\varnothing} d})).
+\end{equation}
+	From there, for any node for which we need the distribution, we can draw the distribution based on the parent's distribution. The child's mean values are drawn directly from the parent distribution, and the child's standard deviation is based on a scaling factor ($\Delta\sigma_n$) drawn from a $Beta$ distribution. The values are taken separately for each dimension:
+	%
+	\begin{equation}
+    \label{eq:theta-epsilon-epsilon-i}
+	\begin{multlined}
+	\theta_{\epsilon\epsilon_i} = (Gauss(\Delta\mu_1, \sigma_{\epsilon 1} \Delta\sigma_1), ... , Gauss(\Delta\mu_d, \sigma_{\epsilon d} \Delta\sigma_d)),
+	\end{multlined}
+	\end{equation}
+	%
+	\begin{equation}
+    \label{eq:delta-miu-n}
+	\Delta\mu_n \sim Gauss(\mu_{\epsilon n}, \sigma_{\epsilon n}), \;\;\;n = 1 ... d,
+	\end{equation}
+	
+	\begin{equation}
+    \label{eq:delta-sigma-n}
+	\Delta\sigma_n \sim Beta(p, q), \;\;\;n = 1 ... d.
+	\end{equation}
+	%
+	With the kernel defined we can now generate data from the model. We begin with the hyperparameters and the probability distribution for the root node ($\theta_{\epsilon_\varnothing} = (Gauss(\mu_{\epsilon_\varnothing 1}, \sigma_{\epsilon_\varnothing 1}), ..., Gauss(\mu_{\epsilon_\varnothing d}, \sigma_{\epsilon_\varnothing d}))$).
+	
+	The following process continues until we generate $n$ points:
+	
+	\noindent\textbf{Step 1:} If $|X| < n$ go to \textbf{Step2}, else \textbf{end}.\\
+	%
+	\textbf{Step 2:} Randomly draw an insertion point $i_x \sim Uni(0, 1)$, $i_x \in (0, 1)$.\\
+	%
+	\textbf{Step 3:} Set the root node as the current node ($\epsilon_c := \epsilon_\varnothing$), depth is 0 ($|\epsilon_c| := 0$).\\
+	%
+	\textbf{Step 4:} If $\nu$ for the current node is not yet known, draw the value. $\nu_{\epsilon_c} \sim Beta(1, \alpha_0 \lambda ^ {|\epsilon_c|} )$.\\
+	%
+	\textbf{Step 5:} If $i_x \leq \nu_{\epsilon_c}$ then $x \sim \theta_{\epsilon_c}$ ($x \sim \theta_{\epsilon_\varnothing}$ if $\epsilon_c = \epsilon_\varnothing$), the point belongs to the current node ($X_{\epsilon_c} := \{x\} \cup X_{\epsilon_c}$), go to \textbf{Step 1}, else move on to \textbf{Step 6}.\\
+	%
+	\textbf{Step 6:} Adjust $i_x$ to new value: $i_x := (i_x - \nu_{\epsilon_c}) / (1 - \nu_{\epsilon_c})$.\\
+	%
+	\textbf{Step 7:} Set current child node index ($\epsilon_c\epsilon_i$) to the first child node of the current node: $i := 0$.\\
+	%
+	\textbf{Step 8:} If $\psi$ for the current child node is not yet known, draw the value: $\psi_{\epsilon_c\epsilon_i} \sim Beta(1, \gamma)$.\\
+	%
+	\textbf{Step 9:} If $\theta_{\epsilon_c\epsilon_i}$ for the current child node is not yet known, draw the values based on the parent of the node: 
+	\noindent	
+	$\theta_{\epsilon_c\epsilon_i} = (Gauss(\Delta\mu_1, \sigma_{\epsilon_c 1} \Delta\sigma_1), ..., Gauss(\Delta\mu_d, \sigma_{\epsilon_c d}\Delta\sigma_d))$,
+	\noindent
+	$\Delta\mu_1$ is drawn from the first dimension of parent node ($\Delta\mu_1 \sim Gauss(\mu_{\epsilon_c 1}, \sigma_{\epsilon_c 1})$),
+	\noindent		
+	...
+	\noindent		
+	$\Delta\mu_d$ is drawn from $d$-th dimension of parent node ($\Delta\mu_d \sim Gauss(\mu_{\epsilon_c d}, \sigma_{\epsilon_c d})$),
+	\noindent		
+	$\Delta\sigma_1\sim Beta(p, q)$,
+	\noindent		
+	...
+	\noindent		
+	$\Delta\sigma_d\sim Beta(p, q)$.\\
+	%
+	\textbf{Step 10:} If $i_x \leq \psi_{\epsilon_c\epsilon_i}$ go to \textbf{Step 11}, else go to \textbf{Step 12}.\\
+	%
+	\textbf{Step 11:} Adjust the value of $i_x$ to new value: $i_x := i_x / \psi_{\epsilon_c\epsilon_i}$. Make the current child the current node ($\epsilon_c := \epsilon_c\epsilon_i$) and increase depth ($|\epsilon_c| := |\epsilon_c| + 1$). Go to \textbf{Step 4}.\\
+	%
+	\textbf{Step 12:} Adjust the value of $i_x$ to new value $i_x := (i_x - \psi_{\epsilon_c\epsilon_i}) / (1 - \psi_{\epsilon_c\epsilon_i})$. Increment child index of currently relevant child node ($i: = i + 1$). Go to \textbf{Step 8}.
+	
+	For better understanding, the generation process described above is illustrated in the block diagram, in Figure~\ref{fig:generator-block-diagram}.
+	%
+	\input{block-diagram}
+	%
+	\section{Parameter selection}
+	\label{parameter}    
+    Hierarchical data might follow hierarchies of different characteristics, e.g., number of objects, depth, width. Thus, to provide the best possible benchmarks for all problems, the generator should provide a high flexibility in generating a variety of hierarchies. The primary interest is in the structure of the hierarchy, that is if the hierarchy is tall or short, wide or narrow, as well as the distribution of data across the levels of the hierarchy. Additionally, the difference between data in parent and child nodes can also be important in some cases. All of these are controlled by a number of parameters in the model:
+	%
+	\begin{enumerate}
+		\item hierarchy depth: $\alpha_0$, $\lambda$ or in a more general sense -- the $\alpha(\epsilon)$ function,
+		\item hierarchy width: $\gamma$,
+		\item data specificity: $p$, $q$,
+		\item starting node distribution: $\theta_{\epsilon_\varnothing}$.
+	\end{enumerate}
+	%
+	\subsection{Controlling the hierarchy depth}
+    \label{sec:controlling-the-hierarchy-depth}
+	%
+	The depth of the hierarchy is controlled by the parameters $\alpha$. The higher the probabilities of data remaining in nodes, the fewer data will travel deep down the tree, and thus the tree will be shallower. On the other hand, if the probability is low, the data will, on average, travel deeper into the tree before stopping. The average probability of data remaining in a given node is based on the selected $\alpha$ function, which in turn is the basis for estimating the behaviour of the tree based on the $\alpha_0$ and $\lambda$ parameters:
+	%
+	\begin{equation}
+	\mathbf{E}[x \in X_\epsilon, |\epsilon| = 0] = \frac{1}{1 + \alpha_0},
+	\end{equation}
+	\begin{equation}
+	\mathbf{E}[x \in X_\epsilon, |\epsilon| = n] = \frac{\prod_{i=0}^{n-1} \alpha_0\lambda^i}{\prod_{j=0}^{n}(1 + \alpha_0\lambda^j)}.
+	\end{equation}
+	%
+	Additionally the variance can also be calculated:
+	%
+	\begin{equation}
+	\mathbf{var}[x \in X_\epsilon, |\epsilon| = 0] = \frac{\alpha_0}{(1 + \alpha_0)^2(2 + \alpha_0)},
+	\end{equation}
+	\begin{equation}
+	\begin{multlined}
+	\mathbf{var}[x \in X_\epsilon, |\epsilon| = n] = \\ = \frac{2 \prod_{i = 0}^{n-1}\alpha_0\lambda^i}{(1+\alpha_0\lambda^n)\prod_{j=0}^{n}(2+\alpha_0\lambda^j)} \\ - \left(\textbf{E}[x \in X_\epsilon, |\epsilon| = n]\right)^2.
+	\end{multlined}
+	\end{equation}
+	%
+	Taking $\alpha(\epsilon)$ and $\gamma$, as well as the data generation procedure, it is possible to estimate the shape of the tree:
+    %
+    \begin{itemize}
+        \item $\alpha_0 = 1, \lambda = 1$: The structure of the tree is chaotic and hard to predict, the further away the parameters move from these values the more stable the tree becomes;
+        \item $\alpha_0 < 1, \lambda \leq 1$: Shallow structure, data located primarily at the top of the tree;
+        \item $\alpha_0 < 1, \lambda > 1$: Similar to the above case, the depth of the tree increases but most data is located at the top of the tree;
+        \item $\alpha_0 > 1, \lambda < 1$: The structure is deep, but data is not located at the top, the bigger $\alpha_0$ starts out, and smaller $\lambda$ is the more data will move down the tree into the central or lower region;
+        \item $\alpha_0 > 1, \lambda \geq 1$: Deep structure, data located primarily at the top of the tree but spread out.
+    \end{itemize}
+    \subsection{Controlling the hierarchy width}
+    %
+    The width of the tree is based on the value of the $\gamma$ parameter at a given node depth $j$. Given that 
+    $x \in X_{E_\epsilon}$ and $x \not \in X_\epsilon$ the average probability of data being generated from a specific subtree (based on the index) can be used to estimate the number of children a node can potentially have:
+	%
+    \begin{equation}
+    \mathbf{E}[x \in X_{E_{\epsilon\epsilon_i}}, i = 1] = \frac{1}{1 + \gamma},
+    \end{equation}
+	
+    \begin{equation}
+    \mathbf{E}[x \in X_{E_{\epsilon\epsilon_i}}, i = n] = \frac{\gamma^{n-1}}{(1 + \alpha_0\lambda^j)^n}.
+    \end{equation}
+	%
+	Variance for these values can also be calculated:
+	%
+    \begin{equation}
+	\mathbf{var}[x \in X_{E_{\epsilon\epsilon_i}}, i = 1] = \frac{\gamma}{(1 + \gamma)^2(2 + \gamma)},
+	\end{equation}
+	
+    \begin{equation}
+	\begin{multlined}
+	\mathbf{var}[x \in X_{E_{\epsilon\epsilon_i}}, i = n] = \frac{2 \gamma^{n-1}}{(1+\gamma)(2+\gamma)^n} - \left(\textbf{E}[x \in X_{E_{\epsilon\epsilon_i}}, i = n]\right)^2.
+	\end{multlined}
+	\end{equation}
+	%
+	Once more, taking the generation procedure into account and the influence of the parameter on the estimated values to judge the general tendencies of the model:
+	%
+	\begin{itemize}
+		\item $\gamma = 1$: The number of children is chaotic and difficult to judge;
+		\item $\gamma < 1$: Narrower tree, less children per node on average;
+		\item $\gamma > 1$: Wider tree, more children per node on average.
+	\end{itemize}
+	Additionally, these tendencies were empirically shown in the~\cref{experiments}. 
+	%
+	\subsection{Controlling data specificity}
+	%
+	When a new group is considered, the parameters for that group's distribution are drawn based on the parent distribution and the $p$ and $q$ kernel parameters. An important aspect of the generated model is that data becomes more specific in lower nodes. This behaviour is always present, however, the values taken for the kernel change the average proportion 
+    %between data standard deviation between the parent and child. 
+    of standard data deviation between the parent and child.
+    This is based on the expected standard deviation of the new node compared to the old node (taken separately in each dimension):
+	%
+	\begin{equation}\label{eq:analitical_expected_standard_dev}
+	\mathbf{E}[\sigma_{\epsilon\epsilon_id}] = \sigma_{\epsilon d} \frac{p}{p + q},
+	\end{equation}
+	%
+	\begin{equation}\label{eq:analitical_variance_standard_dev}
+	\mathbf{var}[\sigma_{\epsilon\epsilon_id}] = \sigma_{\epsilon d} \frac{pq}{(p + q)^2(p + q + 1)}.
+	\end{equation}
+	%
+	By selecting $p$ and $q$ the rate at which the nodes become more specific can be altered. The lower the mean is, the more specific every child will be (on average), the higher the variance is, the more variety there will be in how the child nodes relate to their parent.
+	%
+	\subsection{Influence of starting distribution on results}
+	%
+	Due to the relative nature of the model (i.e., the specific values generated from the model are calculated relative to each other, starting from the root distribution, as shown in equations~\ref{eq:theta-epsilon-varnothing},~\ref{eq:theta-epsilon-epsilon-i},~\ref{eq:delta-miu-n},~\ref{eq:delta-sigma-n}) the choice of initial distribution parameters is not important. The data generated from the model can be scaled afterwards to any desired values as well as moved in any direction along any dimension. Due to this, the generator assumes a value for $\theta_{\epsilon_\varnothing}$:
+	%
+    \begin{equation}
+	\theta_{\epsilon_\varnothing} = (Gauss(0,\sigma_{max}), ..., Gauss(0,\sigma_{max})).
+	\end{equation}
+	%
+	Every dimension of the root node is described by a normal distribution with $\mu_{{\epsilon_\varnothing} 1} = \mu_{{\epsilon_\varnothing} 2} = ... = \mu_{{\epsilon_\varnothing} d} = 0$ and the standard deviation of value $\sigma_{max}$ which is a method's parameter. Within our experiments $\sigma_{max} = 10$. Data generated from the model can be then post-processed to a more desirable spread of values. This is done by applying scaling and translation to all the data generated by the model as well as the parameters of each group node.
+	%
+	\subsection{Post-processing}
+	%
+	The data also undergoes one form of post-processing after being generated. This process, referred in this paper as \textit{reassignment}, moves the data between clusters in such a way that each object belongs to the cluster it is most likely to be generated by:
+	%
+	\begin{equation}
+	\forall_{x \in X}\left( x \in X_{\epsilon_a}\Leftrightarrow \neg\exists_{\epsilon_b \neq \epsilon_a}L(x|\theta_{\epsilon_a})<L(x|\theta_{\epsilon_b})\right )
+	\end{equation}
+	%
+	The process does not modify the clusters number, relations or parameters in any way. It merely relocates data to reduce noise and produce cleaner clusters.
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    \input{level-by-level-hierarchy-width} %2
+	\input{level-by-level-number-of-instances} %1
+	\input{level-by-level-number-of-children-per-node} %3
+	\input{level-by-level-number-of-leaves} %4
+	\input{branching-factor-histogram} %5
+    %
+	\section{Experiments}
+	\label{experiments}
+	%
+	Tests performed on the generator have a number of different goals. Primarily the tests served to investigate the correctness of analytical and intuitive properties of the generator parameters. Thus, a large part of the experiments serves to produce data to be investigated with the purpose of verifying how the different parameters affect the outcome of generation. Secondly, the experiments serve to visualise various properties of the generated hierarchies as a reference for anyone interested in using the generator. The presented values give a clearer view of the results depending on the various parameters, helping to judge the best parameter set for a given use case. Thirdly, the results are taken separately for the raw datasets as generated from the statistical model, and the \textit{reassigned} datasets. The goal of the reassignment process is reducing noise in the generated data by moving objects to the node for which the likelihood of being drawn from that node is the highest. The purpose of these measurements was determining the influence of reassignment on the overall structure of the hierarchy.
+    %    
+    Results presented in this section was obtained by averaging over 100 generations for each of the parameter sets. Each of the parameter sets represents a different hierarchy structure. Some parameters remain constant across all experiments~(\Cref{tab:parameter-configurations}). The experiments were then repeated twice for each generated data set: once using the initial assignment of data to nodes and a second time after reassignment of data. For each of the parameters set, among all of the 100 generated hierarchies, 10 the best representatives (in terms of being as close to the average as possible)  were extracted and published online as a benchmark.
+	
+	A number of quantitative measures were used to investigate the properties of the generated hierarchies:
+    \begin{itemize}
+        \item $N$ -- the number of nodes in the hierarchy, averaged over all hierarchies generated,
+        \item $L$ -- the number of leaves in the hierarchy (nodes with no children or only empty children), averaged over all hierarchies generated,
+        \item $D$ -- the depth of the hierarchy, averaged over all hierarchies generated,
+        \item $B$ -- the breadth of the hierarchy, averaged over all levels in a hierarchy, then overall hierarchies generated,
+        \item $P$ -- the average length of all paths in a hierarchy, averaged over all hierarchies generated.
+	\end{itemize}
+    %
+      %
+	\input{parameter-configurations} %ta tabelka musi byc PRZED ponizzszymi, bo inaczej nie bedzie numerowana jako 1, a to troche dziwne, bo w tekscie sie najpierw do niej odwolujemy
+	\input{quantitative-hierarchy-analysis}
+	All the reported average measures are accompanied with standard deviations. Since the two last values ($B$ and $P$) are averages of averages, the value given to them is not the standard deviation but rather the average standard deviation over all generated hierarchies. All defined measures are reported separately for the regular (\Cref{tab:quantitative-hierarchy-analysis}) and reassigned hierarchies (\Cref{tab:quantitative-hierarchy-analysis-R}).
+    %
+    The rest of the presented experiments, in~\Cref{fig:level-by-level-number-of-instances,fig:level-by-level-number-of-instances-R,fig:level-by-level-hierarchy-width,fig:level-by-level-hierarchy-width-R,fig:level-by-level-number-of-children-per-node,fig:level-by-level-number-of-children-per-node-R,fig:level-by-level-number-of-leaves,fig:level-by-level-number-of-leaves-R,fig:branching-factor-histogram,fig:branching-factor-histogram-R}, consist of histograms averaged over the 100 generated hierarchies for each parameter set:
+	\begin{itemize}
+    	\item average width per level, %2
+		\item average number of objects per node per level, %1
+        \item average number of children per node per level, %4
+		\item average number of leaves per level, %3
+		\item average number of nodes with a given number of children. %5
+	\end{itemize}
+	
+	The data accumulated from the generated hierarchies can be confronted with prior analytical estimations of the effect that parameters have on the structure of the hierarchy. The simplest case is the $\gamma$ parameter. This parameter is responsible for the formation of child nodes and as such the breadth of the hierarchy. We can see that for datasets that differ only by the $\gamma$ value ($s01$ and $s02$ or $s06$ and $s07$), the distribution of data per level is very similar~(\Cref{fig:level-by-level-hierarchy-width,fig:level-by-level-hierarchy-width-R}) -- it would be controlled by the $\alpha$ function, which does not change in this case. On the other hand, there is a significant change in the width of the hierarchy, approximately by one order of magnitude (10 times higher for higher $\gamma$), as is predicted by the prior analysis.
+	
+	The influence of the $\alpha_0$ and $\lambda$ are more difficult to describe concisely, as the two parameters are interwoven together within the $\alpha$ function~(\Cref{eq:alpha_function}). However the most significant presentation of the influence of this function is presented by comparison of the $s00$, $s01$, $s02$ and $s04$ datasets when compared with the $s03$, $s05$, $s06$ and $s07$ datasets. The first set of hierarchies has a clear tendency to retain data at higher levels more so than at lower ones~(\Cref{fig:level-by-level-number-of-instances,fig:level-by-level-number-of-instances-R}). In comparison, the other four hierarchies have the main mass of data located at the lower levels. Especially with the final two datasets ($s06$ and $s07$) the majority of objects are located close to the 5th level of the hierarchy. For these two datasets, we can see that $\alpha$ starts out as a higher value and declines at lower levels. For a high value of $\alpha$ the probability of retaining data in a node is low on average (compare the influence of parameters on the Beta distribution). Thus the higher levels do not retain data, but as the value of $\alpha$ drops over time more of it gathers in the lower levels of the hierarchy before finally the remaining data is passed on to the lowest levels. From this, we come to an important conclusion about the importance of these two parameters for applications of the generator. In cases where it is undesirable to have many generic (root level) objects, and it is important to have clearly distinct specific (lower level) objects, these two parameters must have values similar to those of $s06$ and $s07$ -- high starting $\alpha_0$ and a $\lambda$ that controls the decline of the function value over levels. This behaviour was earlier predicted from the analytical study of the parameters in the~\Cref{sec:controlling-the-hierarchy-depth}, however, the data shows that behaviour more clearly. It appears that the bulk of data is retained at the level in which $\alpha(\epsilon)$ drops below $1$, though this was not fully explored in this paper and is left for further investigation.
+	
+	A very prominent behaviour of the generator seen in all test cases is producing what will be referred to from this point onward as \textit{trailing divisions} of data. Trailing divisions occur when the generator attempts to split small remaining partitions of data. This happens both in right (higher index) children of a populated node and lowers down the hierarchy~(\Cref{fig:trailing}). In both cases, it is possible to observe large numbers of small nodes (i.e., with a low number of children, usually one or zero -- that is to say the node is a leaf node), as well as many nodes that are not populated with data. Trailing divisions reveal the fractal nature of trees generated by the procedure, which manifests itself both when producing direct children for a node (horizontal self-similarity) and going down the hierarchy (vertical self-similarity).
+	%
+	\begin{figure}[H]
+		\centering
+		\includegraphics [scale=1.5] {trailing.pdf}
+		\caption{A simple schema of the location of \textit{trailing divisions}.}
+		\label{fig:trailing}
+	\end{figure}
+	%	
+	Horizontally the above phenomenon can be visualised as the ordered set of all children of any node being statistically similar to the ordered set of all children of the node except the first one. It is a direct effect of the Tree-Structured Stick Breaking process (TSSB)~\cite{ghahramani2010tree}. Similarly to the above, from a vertical point of view, in any tree where $\lambda = 1$ all sub-trees of a node are statistically similar to that node. In the presented experimental data, these trailing divisions are visible as the falling off "tail" in the data per level histograms as well as the cause of the high deviation of width within the tree. Unfortunately, due to the nature of the TSSB distribution, it is impossible to avoid this behaviour without post-processing. No forms of such post-processing were employed for the experiments presented in this paper.
+    
+    As an additional observation to the above, the $\gamma$ value does not change by level. Because of this, a critical factor in considering how many children a node will have is the number of data passing through the node. Bigger nodes that are located higher up are more likely to have more children than smaller nodes lower down the hierarchy. Additionally, the more children a node has, the more of them will be small nodes, i.e., nodes through which few objects pass, resulting primarily in leaf nodes or nodes with single children. This behaviour of smaller nodes also transfers lower down the hierarchy where less data reaches leading to similar behaviour.
+    
+    Finally, the reassigned test cases show a tendency for data to move down hierarchy levels. Intuitively the groups located lower down in the hierarchy are more specific and potentially conflicting data would be prone to moving down into the more specific child clusters. However, despite this tendency, the hierarchies retain most of their previous characteristics, simply with the mass of data being shifted down towards the lower levels of the hierarchy. Due to the post-processing applied to these datasets, they can be better suited for initial testing of grouping methods. In most cases, testing using both types of datasets (unfiltered and filtered) may be the preferred and most valuable approach in every case where the features of the objects are considered. 
+    
+	\section{Benchmarking Dataset}
+    \label{sec:benchmarking_dataset}
+    To establish a benchmarking dataset, representative hierarchies have been chosen from all of the generated ones. For every parameter set-up, from~\Cref{tab:parameter-configurations} (separately for the reassignment procedure and without it) average values of created hierarchies were calculated. The averages cover the statistics reported in the~\Cref{experiments}. After that, the Euclidean distance was calculated between all the generated hierarchies and the corresponding average values so that the top 10 closest datasets were identified. The final collection of 160 hierarchies is publicly available and might be used for benchmarking purposes (\texttt{http://kio.pwr.edu.pl/?page\_id=396}).
+	%
+	\section{Conclusions}
+	\label{conclusion}
+	The experiments presented in the previous sections serve to highlight both the strengths and weaknesses of our proposed generator. A prominent strength is a high range of different tree structures that can be generated and the ability to control these structures using the introduced parameters. Thanks to that, a wide range of different hierarchy types, often seen in the real-world problems, has been generated and made publicly available. Published benchmars and the ability to create more hierarchies using the generator is lying a solid foundation for further development of the concept of Object Cluster Hierarchies.
+	
+	From a practical point of view, it is also essential that the parameters can be separated into groups, each controlling a different aspect of the hierarchy. Vertical distribution of data is controlled by $\alpha_0$ and $\lambda$, hierarchy width depends on the value of $\gamma$, and $p$, $q$ controls the data specificity. This fact allows for a further fine-tuning of desired test data. Every parameter set has an interpretation and its effect on the generated hierarchy is straightforward, as shown in this article. The generation process scales with the number of points to generate, expanding the hierarchy as more elements are generated.
+    
+    One of the findings is the fact that the generated hierarchy will always display a degree of self-similarity, replicating the same general form both vertically and horizontally. We called it as generation of the trailing divisions. Because of that a few specific areas of the generated hierarchies are not fully controlled. A remedy for this issue is to use a post-processing procedure similar to the described reassignment process. This should result in cleaner hierarchies being generated and giving the user finer control over the overall structure.
+    
+    In its current form, the generator is limited to a generation of normally-distributed, multidimensional, and uncorrelated real value data. It can be extended to use different kernels leading to different structures of generated hierarchies or generators operating on different types of data.
+    
+    Furthermore, the self-similar (fractal) nature of the hierarchies suggests a potential for the generator to be described using the language of fractals and especially L-Systems~\cite{prusinkiewicz2013lindenmayer}. Describing the generation process in this way may offer a different (more granular) view over the details of the hierarchical structure. 
+	%
+	\bibliography{mybibfile}
+	%
+\end{document}
