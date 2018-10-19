@@ -1,0 +1,409 @@
+\noindent
+\begin{figure*}[p!]
+\centering
+\begin{tabular}{rrrr}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  \begin{tikzpicture}
+    \begin{axis} 
+		[
+	  	ybar,
+	  	title=s00,
+		  xmin = -0.5,
+		  xmax = 6.5,
+		  bar width = 11.5,
+		]
+		\addplot
+		[
+			color = blue,
+			fill = blue,
+		]
+		table
+		[
+	  	col sep = semicolon,
+	  	x = "Level",
+	  	y = "s00",
+		]
+		{avgNumOfLeavesPerLevel.csv};
+		\end{axis}
+  \end{tikzpicture}
+  &
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  \begin{tikzpicture}
+    \begin{axis} 
+		[
+	  	ybar,
+	  	title=s01,
+		  xmin = -0.6,
+		  bar width = 4.1,
+		]
+		\addplot
+		[
+			color = blue,
+			fill = blue,
+		]
+		table
+		[
+	  	col sep = semicolon,
+	  	x = "Level",
+	  	y = "s01",
+		]
+		{avgNumOfLeavesPerLevel.csv};
+		\end{axis}
+  \end{tikzpicture}
+  &
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  \begin{tikzpicture}
+    \begin{axis} 
+		[
+	  	ybar,
+	  	title=s02,
+		  xmin = -0.55,
+		  bar width = 4.4,
+		]
+		\addplot
+		[
+			color = blue,
+			fill = blue,
+		]
+		table
+		[
+	  	col sep = semicolon,
+	  	x = "Level",
+	  	y = "s02",
+		]
+		{avgNumOfLeavesPerLevel.csv};
+		\end{axis}
+  \end{tikzpicture}
+  &
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  \begin{tikzpicture}
+    \begin{axis} 
+		[
+	  	ybar,
+	  	title=s03,
+		  xmin = -0.5,
+		  xmax = 8.5,
+	   	bar width = 8.8,
+		]
+		\addplot
+		[
+			color = blue,
+			fill = blue,
+		]
+		table
+		[
+	  	col sep = semicolon,
+	  	x = "Level",
+	  	y = "s03",
+		]
+		{avgNumOfLeavesPerLevel.csv};
+		\end{axis}
+  \end{tikzpicture}
+  \\
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  \begin{tikzpicture}
+    \begin{axis} 
+		[
+	  	ybar,
+	  	title=s04,
+		  xmin = -0.5,
+		  bar width = 0.8,
+		]
+		\addplot
+		[
+			color = blue,
+			fill = blue,
+		]
+		table
+		[
+	  	col sep = semicolon,
+	  	x = "Level",
+	  	y = "s04",
+		]
+		{avgNumOfLeavesPerLevel.csv};
+		\end{axis}
+  \end{tikzpicture}
+  &
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  \begin{tikzpicture}
+    \begin{axis} 
+		[
+	  	ybar,
+	  	title=s05,
+		  xmin = -0.45,
+		  xmax = 9.3,
+		  bar width = 8.2,
+		]
+		\addplot
+		[
+			color = blue,
+			fill = blue,
+		]
+		table
+		[
+	  	col sep = semicolon,
+	  	x = "Level",
+	  	y = "s05",
+		]
+		{avgNumOfLeavesPerLevel.csv};
+		\end{axis}
+  \end{tikzpicture}
+  &
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  \begin{tikzpicture}
+    \begin{axis} 
+		[
+	  	ybar,
+	  	title=s06,
+		  xmin = -0.5,
+		  xmax = 10.6,
+		  bar width = 7.1,
+		]
+		\addplot
+		[
+			color = blue,
+			fill = blue,
+		]
+		table
+		[
+	  	col sep = semicolon,
+	  	x = "Level",
+	  	y = "s06",
+		]
+		{avgNumOfLeavesPerLevel.csv};
+		\end{axis}
+  \end{tikzpicture}
+  &
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  \begin{tikzpicture}
+    \begin{axis} 
+		[
+	  	ybar,
+	  	title=s07,
+		  xmin = -0.5,
+		  xmax = 11.6,
+		  bar width = 6.5,
+		]
+		\addplot
+		[
+			color = blue,
+			fill = blue,
+		]
+		table
+		[
+	  	col sep = semicolon,
+	  	x = "Level",
+	  	y = "s07",
+		]
+		{avgNumOfLeavesPerLevel.csv};
+		\end{axis}
+  \end{tikzpicture}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\end{tabular}
+\caption{Average number of leaf nodes $(L)$ on every hierarchy level \textbf{without} execution of reassignment procedure. Vertical axes show the number of children and horizontal axes indicate hierarchy level.}\label{fig:level-by-level-number-of-leaves}
+\end{figure*}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\noindent
+\begin{figure*}[p!]
+\centering
+\begin{tabular}{rrrr}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  \begin{tikzpicture}
+    \begin{axis} 
+		[
+	  	ybar,
+	  	title=s00,
+		  xmin = -0.5,
+		  xmax = 6.5,
+		  bar width = 11.5,
+		]
+		\addplot
+		[
+			color = blue,
+			fill = blue,
+		]
+		table
+		[
+	  	col sep = semicolon,
+	  	x = "Level",
+	  	y = "s00r",
+		]
+		{avgNumOfLeavesPerLevel.csv};
+		\end{axis}
+  \end{tikzpicture}
+  &
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  \begin{tikzpicture}
+    \begin{axis} 
+		[
+	  	ybar,
+	  	title=s01,
+		  xmin = -0.6,
+		  bar width = 4.1,
+		]
+		\addplot
+		[
+			color = blue,
+			fill = blue,
+		]
+		table
+		[
+	  	col sep = semicolon,
+	  	x = "Level",
+	  	y = "s01r",
+		]
+		{avgNumOfLeavesPerLevel.csv};
+		\end{axis}
+  \end{tikzpicture}
+  &
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  \begin{tikzpicture}
+    \begin{axis} 
+		[
+	  	ybar,
+	  	title=s02,
+		  xmin = -0.55,
+		  bar width = 4.4,
+		]
+		\addplot
+		[
+			color = blue,
+			fill = blue,
+		]
+		table
+		[
+	  	col sep = semicolon,
+	  	x = "Level",
+	  	y = "s02r",
+		]
+		{avgNumOfLeavesPerLevel.csv};
+		\end{axis}
+  \end{tikzpicture}
+  &
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  \begin{tikzpicture}
+    \begin{axis} 
+		[
+	  	ybar,
+	  	title=s03,
+		  xmin = -0.5,
+		  xmax = 8.5,
+	   	bar width = 8.8,
+		]
+		\addplot
+		[
+			color = blue,
+			fill = blue,
+		]
+		table
+		[
+	  	col sep = semicolon,
+	  	x = "Level",
+	  	y = "s03r",
+		]
+		{avgNumOfLeavesPerLevel.csv};
+		\end{axis}
+  \end{tikzpicture}
+  \\
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  \begin{tikzpicture}
+    \begin{axis} 
+		[
+	  	ybar,
+	  	title=s04,
+		  xmin = -0.5,
+		  bar width = 0.8,
+		]
+		\addplot
+		[
+			color = blue,
+			fill = blue,
+		]
+		table
+		[
+	  	col sep = semicolon,
+	  	x = "Level",
+	  	y = "s04r",
+		]
+		{avgNumOfLeavesPerLevel.csv};
+		\end{axis}
+  \end{tikzpicture}
+  &
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  \begin{tikzpicture}
+    \begin{axis} 
+		[
+	  	ybar,
+	  	title=s05,
+		  xmin = -0.45,
+		  xmax = 9.3,
+		  bar width = 8.2,
+		]
+		\addplot
+		[
+			color = blue,
+			fill = blue,
+		]
+		table
+		[
+	  	col sep = semicolon,
+	  	x = "Level",
+	  	y = "s05r",
+		]
+		{avgNumOfLeavesPerLevel.csv};
+		\end{axis}
+  \end{tikzpicture}
+  &
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  \begin{tikzpicture}
+    \begin{axis} 
+		[
+	  	ybar,
+	  	title=s06,
+		  xmin = -0.5,
+		  xmax = 10.6,
+		  bar width = 7.1,
+		]
+		\addplot
+		[
+			color = blue,
+			fill = blue,
+		]
+		table
+		[
+	  	col sep = semicolon,
+	  	x = "Level",
+	  	y = "s06r",
+		]
+		{avgNumOfLeavesPerLevel.csv};
+		\end{axis}
+  \end{tikzpicture}
+  &
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  \begin{tikzpicture}
+    \begin{axis} 
+		[
+	  	ybar,
+	  	title=s07,
+		  xmin = -0.5,
+		  xmax = 11.6,
+		  bar width = 6.5,
+		]
+		\addplot
+		[
+			color = blue,
+			fill = blue,
+		]
+		table
+		[
+	  	col sep = semicolon,
+	  	x = "Level",
+	  	y = "s07r",
+		]
+		{avgNumOfLeavesPerLevel.csv};
+		\end{axis}
+  \end{tikzpicture}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\end{tabular}
+\caption{Average number of leaf nodes $(L)$ on every hierarchy level \textbf{with} execution of reassignment procedure. Vertical axes show the number of children and horizontal axes indicate hierarchy level.}\label{fig:level-by-level-number-of-leaves-R}
+\end{figure*}

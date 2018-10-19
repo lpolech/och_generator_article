@@ -1,0 +1,415 @@
+\noindent
+\begin{figure*}[p!]
+\centering
+\begin{tabular}{rrrr}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  \begin{tikzpicture}
+    \begin{axis} 
+		[
+	  	ybar,
+	  	title=s00,
+		  xmin = 0.5,
+		  xmax = 9.5,
+		  bar width = 8.9,
+		]
+		\addplot
+		[
+			color = blue,
+			fill = blue,
+		]
+		table
+		[
+	  	col sep = semicolon,
+	  	x = "Factor",
+	  	y = "s00",
+		]
+		{branchingFactorHistogram.csv};
+		\end{axis}
+  \end{tikzpicture}
+  &
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  \begin{tikzpicture}
+    \begin{axis} 
+		[
+	  	ybar,
+	  	title=s01,
+		  xmin = 0.6,
+		  xmax = 8.5,
+		  bar width = 10.1,
+		]
+		\addplot
+		[
+			color = blue,
+			fill = blue,
+		]
+		table
+		[
+	  	col sep = semicolon,
+	  	x = "Factor",
+	  	y = "s01",
+		]
+		{branchingFactorHistogram.csv};
+		\end{axis}
+  \end{tikzpicture}
+  &
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  \begin{tikzpicture}
+    \begin{axis} 
+		[
+	  	ybar,
+	  	title=s02,
+		  xmin = 0.45,
+		  xmax = 19.0,
+		  bar width = 4.1,
+		]
+		\addplot
+		[
+			color = blue,
+			fill = blue,
+		]
+		table
+		[
+	  	col sep = semicolon,
+	  	x = "Factor",
+	  	y = "s02",
+		]
+		{branchingFactorHistogram.csv};
+		\end{axis}
+  \end{tikzpicture}
+  &
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  \begin{tikzpicture}
+    \begin{axis} 
+		[
+	  	ybar,
+	  	title=s03,
+		  xmin = 0.5,
+		  xmax = 12,
+	   	bar width = 6.9,
+		]
+		\addplot
+		[
+			color = blue,
+			fill = blue,
+		]
+		table
+		[
+	  	col sep = semicolon,
+	  	x = "Factor",
+	  	y = "s03",
+		]
+		{branchingFactorHistogram.csv};
+		\end{axis}
+  \end{tikzpicture}
+  \\
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  \begin{tikzpicture}
+    \begin{axis} 
+		[
+	  	ybar,
+	  	title=s04,
+		  xmin = 0.5,
+		  xmax = 12.5,
+		  bar width = 6.5,
+		]
+		\addplot
+		[
+			color = blue,
+			fill = blue,
+		]
+		table
+		[
+	  	col sep = semicolon,
+	  	x = "Factor",
+	  	y = "s04",
+		]
+		{branchingFactorHistogram.csv};
+		\end{axis}
+  \end{tikzpicture}
+  &
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  \begin{tikzpicture}
+    \begin{axis} 
+		[
+	  	ybar,
+	  	title=s05,
+		  xmin = 0.5,
+		  xmax = 20.0,
+		  bar width = 3.8,
+		]
+		\addplot
+		[
+			color = blue,
+			fill = blue,
+		]
+		table
+		[
+	  	col sep = semicolon,
+	  	x = "Factor",
+	  	y = "s05",
+		]
+		{branchingFactorHistogram.csv};
+		\end{axis}
+  \end{tikzpicture}
+  &
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  \begin{tikzpicture}
+    \begin{axis} 
+		[
+	  	ybar,
+	  	title=s06,
+		  xmin = 0.5,
+		  xmax = 10,
+		  bar width = 8.28,
+		]
+		\addplot
+		[
+			color = blue,
+			fill = blue,
+		]
+		table
+		[
+	  	col sep = semicolon,
+	  	x = "Factor",
+	  	y = "s06",
+		]
+		{branchingFactorHistogram.csv};
+		\end{axis}
+  \end{tikzpicture}
+  &
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  \begin{tikzpicture}
+    \begin{axis} 
+		[
+	  	ybar,
+	  	title=s07,
+		  xmin = 0.4,
+		  xmax = 24.6,
+		  bar width = 3.2,
+		]
+		\addplot
+		[
+			color = blue,
+			fill = blue,
+		]
+		table
+		[
+	  	col sep = semicolon,
+	  	x = "Factor",
+	  	y = "s07",
+		]
+		{branchingFactorHistogram.csv};
+		\end{axis}
+  \end{tikzpicture}%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\end{tabular}
+\caption{Average number of child nodes for every node in generated hierarchies \textbf{without} execution of reassignment procedure. Horizontal axes show the number of children and vertical axes show the number of occurrences (count) in the hierarchies.}\label{fig:branching-factor-histogram}
+\end{figure*}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\noindent    
+\begin{figure*}[p!]
+\centering
+\begin{tabular}{rrrr}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  \begin{tikzpicture}
+    \begin{axis} 
+		[
+	  	ybar,
+	  	title=s00,
+		  xmin = 0.5,
+		  xmax = 9.5,
+		  bar width = 8.9,
+		]
+		\addplot
+		[
+			color = blue,
+			fill = blue,
+		]
+		table
+		[
+	  	col sep = semicolon,
+	  	x = "Factor",
+	  	y = "s00r",
+		]
+		{branchingFactorHistogram.csv};
+		\end{axis}
+  \end{tikzpicture}
+  &
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  \begin{tikzpicture}
+    \begin{axis} 
+		[
+	  	ybar,
+	  	title=s01,
+		  xmin = 0.6,
+		  xmax = 8.5,
+		  bar width = 10.1,
+		]
+		\addplot
+		[
+			color = blue,
+			fill = blue,
+		]
+		table
+		[
+	  	col sep = semicolon,
+	  	x = "Factor",
+	  	y = "s01r",
+		]
+		{branchingFactorHistogram.csv};
+		\end{axis}
+  \end{tikzpicture}
+  &
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  \begin{tikzpicture}
+    \begin{axis} 
+		[
+	  	ybar,
+	  	title=s02,
+		  xmin = 0.45,
+		  xmax = 19.0,
+		  bar width = 4.1,
+		]
+		\addplot
+		[
+			color = blue,
+			fill = blue,
+		]
+		table
+		[
+	  	col sep = semicolon,
+	  	x = "Factor",
+	  	y = "s02r",
+		]
+		{branchingFactorHistogram.csv};
+		\end{axis}
+  \end{tikzpicture}
+  &
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  \begin{tikzpicture}
+    \begin{axis} 
+		[
+	  	ybar,
+	  	title=s03,
+		  xmin = 0.5,
+		  xmax = 12,
+	   	bar width = 6.9,
+		]
+		\addplot
+		[
+			color = blue,
+			fill = blue,
+		]
+		table
+		[
+	  	col sep = semicolon,
+	  	x = "Factor",
+	  	y = "s03r",
+		]
+		{branchingFactorHistogram.csv};
+		\end{axis}
+  \end{tikzpicture}
+  \\
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  \begin{tikzpicture}
+    \begin{axis} 
+		[
+	  	ybar,
+	  	title=s04,
+		  xmin = 0.5,
+		  xmax = 12.5,
+		  bar width = 6.5,
+		]
+		\addplot
+		[
+			color = blue,
+			fill = blue,
+		]
+		table
+		[
+	  	col sep = semicolon,
+	  	x = "Factor",
+	  	y = "s04r",
+		]
+		{branchingFactorHistogram.csv};
+		\end{axis}
+  \end{tikzpicture}
+  &
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  \begin{tikzpicture}
+    \begin{axis} 
+		[
+	  	ybar,
+	  	title=s05,
+		  xmin = 0.5,
+		  xmax = 20.0,
+		  bar width = 3.8,
+		]
+		\addplot
+		[
+			color = blue,
+			fill = blue,
+		]
+		table
+		[
+	  	col sep = semicolon,
+	  	x = "Factor",
+	  	y = "s05r",
+		]
+		{branchingFactorHistogram.csv};
+		\end{axis}
+  \end{tikzpicture}
+  &
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  \begin{tikzpicture}
+    \begin{axis} 
+		[
+	  	ybar,
+	  	title=s06,
+		  xmin = 0.5,
+		  xmax = 10,
+		  bar width = 8.28,
+		]
+		\addplot
+		[
+			color = blue,
+			fill = blue,
+		]
+		table
+		[
+	  	col sep = semicolon,
+	  	x = "Factor",
+	  	y = "s06r",
+		]
+		{branchingFactorHistogram.csv};
+		\end{axis}
+  \end{tikzpicture}
+  &
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  \begin{tikzpicture}
+    \begin{axis} 
+		[
+	  	ybar,
+	  	title=s07,
+		  xmin = 0.4,
+		  xmax = 24.6,
+		  bar width = 3.2,
+		]
+		\addplot
+		[
+			color = blue,
+			fill = blue,
+		]
+		table
+		[
+	  	col sep = semicolon,
+	  	x = "Factor",
+	  	y = "s07r",
+		]
+		{branchingFactorHistogram.csv};
+		\end{axis}
+  \end{tikzpicture}%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\end{tabular}
+\caption{Average number of child nodes for every node in generated hierarchies \textbf{with} execution of reassignment procedure. Horizontal axes show the number of children and vertical axes show the number of occurrences (count) in the hierarchies.}\label{fig:branching-factor-histogram-R}
+\end{figure*}
